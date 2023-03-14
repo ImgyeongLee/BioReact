@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import MotorDevice from "./MotorDevice";
 import ValveDevice from "./ValveDevice";
 import SensorDevice from "./SensorDevice";
+import {css} from "@emotion/css";
 
 function FinalJar({jar, socket}) {
 
@@ -30,7 +31,7 @@ function FinalJar({jar, socket}) {
     }
 
     return (
-        <div>
+        <div className={css`width: 500px`}>
             <h3>{jar.name}</h3>
             <h5>Debug: {jar.debug ? "true" : "false"}</h5>
             <h5>State: {jar.state}</h5>
@@ -117,12 +118,14 @@ function FinalJar({jar, socket}) {
             }>Cancel Recipe</button>}
             <p>Ready for incubation: {jar.incubateReady ? "true" : "false"}</p>
             <p>Receiving cooling: {jar.cooling ? "true" : "false"}</p>
-            <MotorDevice device={jar.impellerMotor} deviceGroup={"finalJars"} socket={socket}/>
-            {jar.valves.map((valve) =>
-                <ValveDevice key={valve["name"]} device={valve} deviceGroup={"ingredientValve"} socket={socket}/>
-            )}
-            <ValveDevice device={jar.tempValve} deviceGroup={"tempValve"} socket={socket}/>
-            <SensorDevice device={jar.tempProbe} deviceGroup={"tempProbe"} socket={socket}/>
+            <div className={css`display: flex; flex-wrap: wrap`}>
+                <MotorDevice device={jar.impellerMotor} deviceGroup={"finalJars"} socket={socket}/>
+                {jar.valves.map((valve) =>
+                    <ValveDevice key={valve["name"]} device={valve} deviceGroup={"ingredientValve"} socket={socket}/>
+                )}
+                <ValveDevice device={jar.tempValve} deviceGroup={"tempValve"} socket={socket}/>
+                <SensorDevice device={jar.tempProbe} deviceGroup={"tempProbe"} socket={socket}/>
+            </div>
         </div>
     )
 }

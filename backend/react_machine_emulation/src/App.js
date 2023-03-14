@@ -3,6 +3,7 @@ import {css} from "@emotion/css";
 import FinalJar from "./components/FinalJar";
 import {useSelector} from "react-redux";
 import {getLocalStatus} from "./selectors";
+import MotorDevice from "./components/MotorDevice";
 
 function App() {
     const deviceStatus = useSelector(getLocalStatus);
@@ -16,6 +17,7 @@ function App() {
     return (
         <div>
             sup lmao
+            {deviceStatus && deviceStatus["coolantMotor"] && <MotorDevice device={deviceStatus["coolantMotor"]} deviceGroup={"coolantMotor"} socket={socket}/>}
             <div className={css`display: flex`}>
                 {finalJarComponents}
             </div>

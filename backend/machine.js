@@ -1,9 +1,8 @@
 const {Jar} = require("./jarClass");
 const {Motor} = require("./motorWrapper");
+let {pumpOnSignal} = require("./pumpOnSignal")
 
 const machineSpecification = require("./machine_specification.json")
-
-let pumpOnSignal = 0
 
 let machine = {
     "finalJars": new Map(Object.keys(machineSpecification["finalJars"]).map(jarName => [jarName, new Jar(jarName)])),
@@ -31,19 +30,20 @@ function getAllStatuses() {
     }
 }
 
-let tempPolling = setInterval(() => {
+setInterval(() => {
     if (!machine) {
         return
     }
-    if (pumpOnSignal > 0) {
+    if (pumpOnSignal["on"] > 0) {
         machine["coolantMotor"].Speed = 1000
+        console.log("cooling motor on")
     } else {
         machine["coolantMotor"].Speed = 0
+        console.log("cooling motor off")
     }
 }, 1000)
 
 module.exports = {
     machine: machine,
-    pumpOnSignal: pumpOnSignal,
     getAllStatuses: getAllStatuses
 }

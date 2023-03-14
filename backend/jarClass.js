@@ -2,7 +2,7 @@ const {Motor} = require("./motorWrapper");
 const {Valve} = require("./valveWrapper");
 const {Sensor} = require("./sensorWrapper");
 const machineSpecification = require("./machine_specification.json")
-let {pumpOnSignal} = require("./machine")
+let {pumpOnSignal} = require("./pumpOnSignal")
 
 class Jar {
     recipe
@@ -75,10 +75,12 @@ class Jar {
         this.statusPolling = setInterval(() => {
             //determine if the cooling motor needs to run or not
             if (this.tempProbe.value > (this.recipe["temperature"] + 2) && !this.cooling) {
-                pumpOnSignal += 1
+                if(pumpOnSignal)
+                    pumpOnSignal["on"] += 1
                 this.cooling = true
             } else if (this.tempProbe.value < (this.recipe["temperature"] - 2) && this.cooling) {
-                pumpOnSignal -= 1
+                if(pumpOnSignal)
+                    pumpOnSignal["on"] -= 1
                 this.cooling = false
             }
             //check if jar is idling

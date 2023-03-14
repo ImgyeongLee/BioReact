@@ -44,7 +44,7 @@ function init(server) {
 
         socket.on('setMotorSpeed', (jarName, deviceName, deviceGroup, newSpeed, callback) => {
             callback = checkCallback(callback, socket.id, "setMotorSpeed")
-            console.log("received new speed: ", newSpeed, " for ", deviceName, " of ", jarName)
+            // console.log("received new speed: ", newSpeed, " for ", deviceName, " of ", jarName)
             switch (deviceGroup) {
                 case "coolantMotor":
                     machine["coolantMotor"].Speed = newSpeed
@@ -95,7 +95,7 @@ function init(server) {
                     "errorMessage": "jar not found"
                 })
             }
-            console.log("received new state: ", state, " for ", deviceName, " of ", jarName)
+            // console.log("received new state: ", state, " for ", deviceName, " of ", jarName)
             let currentJar = machine["finalJars"].get(jarName)
             switch (deviceGroup) {
                 case "ingredientValve":
@@ -137,7 +137,7 @@ function init(server) {
             let currentJar = machine["finalJars"].get(jarName)
             switch (deviceGroup) {
                 case "tempProbe":
-                    console.log("received new value for tempProbe of ", jarName, ": ", newValue)
+                    // console.log("received new value for tempProbe of ", jarName, ": ", newValue)
                     currentJar.tempProbe.setValue = newValue
                     break
                 default:
