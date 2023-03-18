@@ -1,3 +1,5 @@
+let {ingredientOnSignal} = require("./signals");
+
 class Valve {
     // motor's actionQueue's structure:
     // {
@@ -9,12 +11,13 @@ class Valve {
     gpio
     cancel
     state = "idle" //"running", "paused", "idle"
-    constructor(pin, name, jarName, debug) {
+    constructor(pin, name, jarName, ingredientJarName, debug) {
         this.pinCode = pin
         this.opened = false
         this.debug = debug
         this.name = name
         this.jarName = jarName
+        this.ingredientJarName = ingredientJarName
 
         if (debug === false) {
             const raspi = require('raspi');
@@ -27,19 +30,26 @@ class Valve {
         }
     }
 
-    open() {
-        this.opened = true
-        if (!this.debug)
-            this.pin.write(this.gpio.HIGH)
-    }
-
-    close() {
-        this.opened = false
-        if (!this.debug)
-            this.pin.write(this.gpio.LOW)
-    }
+    // open() {
+    //     this.opened = true
+    //     if (!this.debug)
+    //         this.pin.write(this.gpio.HIGH)
+    // }
+    //
+    // close() {
+    //     this.opened = false
+    //     if (!this.debug)
+    //         this.pin.write(this.gpio.LOW)
+    // }
 
     set openState(newState) {
+        if(this.opened !== newState){
+            if(newState){
+                ingredientOnSignal[this.ingredientJarName] += 1
+            } else {
+                ingredientOnSignal[this.ingredientJarName] -= 1
+            }
+        }
         this.opened = newState
         if (!this.debug) {
             if (newState)

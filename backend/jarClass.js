@@ -2,7 +2,7 @@ const {Motor} = require("./motorWrapper");
 const {Valve} = require("./valveWrapper");
 const {Sensor} = require("./sensorWrapper");
 const machineSpecification = require("./machine_specification.json")
-let {pumpOnSignal} = require("./pumpOnSignal")
+let {pumpOnSignal} = require("./signals")
 
 class Jar {
     recipe
@@ -23,7 +23,7 @@ class Jar {
             individualValve => [
                 individualValve["name"], {
                     "startJar": machineSpecification["startJars"][individualValve["startJar"]],
-                    "valve": new Valve(individualValve["pin"], individualValve["name"], name, this.debug)
+                    "valve": new Valve(individualValve["pin"], individualValve["name"], name, machineSpecification["startJars"][individualValve["startJar"]]["ingredient"], this.debug)
                 }
             ]
         ))
