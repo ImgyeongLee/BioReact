@@ -1,10 +1,8 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10289234&assignment_repo_type=AssignmentRepo)
+BioReact
 
-Bioreactor
+BioReact is a full-stack system for the BMES bioreactor. BMES at OSU is a club that brings networking opportunities to students and allows hands-on collaboration on designing and developing projects relevant to the biomedical industry. One of the projects in this club is to develop a more affordable bioreactor. Our project contains both the frontend to control the machine and the backend that can handle the automation for it.
 
-MEMO
+Frontend: Imgyeong Lee
+Backend: Anh (Frank) Nguyen
 
-- I think we need to add some redux things for selection & management of recipes.
-- There is a sample data in data directory.
-- The page styling is not dynamic style (so sad)
-- For now, if you click the links in the sidebar on the /load page, you will navigate to /recipes/:num page which is for recipe management.
+Demo Video: https://drive.google.com/file/d/1FU7vR04K2Bq_8KfG2Pk0k2gCRSOt85JH/view?usp=share_link
