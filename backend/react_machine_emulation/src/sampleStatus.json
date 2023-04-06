@@ -41,6 +41,46 @@
           "jarName": "Jar 1",
           "type": "sensor"
         }
+      },
+      {
+        "name": "Jar 1",
+        "debug": true,
+        "state": "idle",
+        "incubateReady": false,
+        "cooling": false,
+        "motor": {
+          "pin": "GPIO21",
+          "speed": 0,
+          "debug": true,
+          "name": "motor1",
+          "jarName": "Jar 1",
+          "type": "motor"
+        },
+        "valves": [
+          {
+            "pin": "GPIO16",
+            "opened": false,
+            "debug": true,
+            "name": "valve1",
+            "jarName": "Jar 2",
+            "type": "valve"
+          }
+        ],
+        "tempValve": {
+          "pin": "GPIO17",
+          "opened": false,
+          "debug": true,
+          "name": "Jar 1TempValve",
+          "jarName": "Jar 1",
+          "type": "valve"
+        },
+        "tempProbe": {
+          "pin": "GPIO16",
+          "debug": true,
+          "name": "Jar 1TempProbe",
+          "jarName": "Jar 1",
+          "type": "sensor"
+        }
       }
     ],
     "startJars": [

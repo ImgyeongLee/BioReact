@@ -9,11 +9,11 @@ function SensorDevice(props) {
         let newValue = event.target.value
         dispatch({
             "type": "UPDATE_SENSOR_VALUE",
-            "deviceGroup": props.deviceGroup,
+            "deviceGroup": props.device.deviceGroup,
             "newValue": newValue,
             "jarName": props.device.jarName
         })
-        props.socket.emit("setSensor", props.device.jarName, props.deviceGroup, event.target.value, (data) => {
+        props.socket.emit("setSensor", props.device.jarName, props.device.deviceGroup, event.target.value, (data) => {
             if (data["status"] === "ok") {
                 console.log("sensor ", props.device.name, " of ", props.device.jarName, " changed to value ", newValue)
             } else {

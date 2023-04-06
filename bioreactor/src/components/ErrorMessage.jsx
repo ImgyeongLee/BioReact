@@ -16,13 +16,13 @@ const Error = styled.div`
   font-weight: bold;
 `;
 
-function ErrorMessage({ children, ...rest }) {
-  return (
-    <Message {...rest}>
-      <Error>Something went wrong</Error>
-      {children}
-    </Message>
-  );
+function ErrorMessage({children, ...rest}) {
+    return (
+        <Message {...rest}>
+            <Error>Something went wrong</Error>
+            {children}
+        </Message>
+    );
 }
 
 export default ErrorMessage;

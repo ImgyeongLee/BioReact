@@ -10,11 +10,12 @@ class Motor {
     state = "idle" //"running", "paused", "idle"
     speed = 0
 
-    constructor(pin, name, jarName, debug) {
+    constructor(pin, name, jarName, deviceGroup, debug) {
         this.pinCode = pin
         this.debug = debug
         this.name = name
         this.jarName = jarName
+        this.deviceGroup = deviceGroup
 
 
         if (!debug) {
@@ -40,6 +41,7 @@ class Motor {
             "debug": this.debug,
             "name": this.name,
             "jarName": this.jarName,
+            "deviceGroup": this.deviceGroup,
             "type": "motor"
         }
     }

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "salty alcohol",
+    "time": 10000,
+    "motorSpeed": 500,
+    "temperature": 40,
+    "ingredients": {
+      "Isopropyl Alcohol": 50,
+      "Salt water": 25
+    }
+  },
+  {
+    "name": "salty alcohol again",
+    "time": 800,
+    "motorSpeed": 500,
+    "temperature": 40,
+    "ingredients": {
+      "Isopropyl Alcohol": 50,
+      "Salt water": 25
+    }
+  },
+  {
+    "name": "salty alcohol deluxe",
+    "time": 500,
+    "motorSpeed": 500,
+    "temperature": 40,
+    "ingredients": {
+      "Isopropyl Alcohol": 50,
+      "Salt water": 25
+    }
+  },
+  {
+    "name": "salty alcohol premium",
+    "time": 12000,
+    "motorSpeed": 500,
+    "temperature": 40,
+    "ingredients": {
+      "Isopropyl Alcohol": 50,
+      "Salt water": 25
+    }
+  }
+]

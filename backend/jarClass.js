@@ -2,7 +2,7 @@ const {Motor} = require("./motorWrapper");
 const {Valve} = require("./valveWrapper");
 const {Sensor} = require("./sensorWrapper");
 const machineSpecification = require("./machine_specification.json")
-let {pumpOnSignal} = require("./signals")
+let {states} = require("./states")
 
 class Jar {
     recipe
@@ -17,19 +17,28 @@ class Jar {
         this.debug = machineSpecification["debug"]
         this.specification = machineSpecification["finalJars"][name]
         let motorSpec = this.specification["impellerMotor"]
-        this.impellerMotor = new Motor(motorSpec["pin"], motorSpec["name"], name, this.debug)
+        this.impellerMotor = new Motor(motorSpec["pin"], motorSpec["name"], name, "finalJars", this.debug)
 
         this.valves = new Map(this.specification["valves"].map(
             individualValve => [
                 individualValve["name"], {
                     "startJar": machineSpecification["startJars"][individualValve["startJar"]],
-                    "valve": new Valve(individualValve["pin"], individualValve["name"], name, machineSpecification["startJars"][individualValve["startJar"]]["ingredient"], this.debug)
+                    "valve": new Valve(
+                        individualValve["pin"],
+                        individualValve["name"],
+                        name,
+                        machineSpecification["startJars"][individualValve["startJar"]]["ingredient"],
+                        "ingredientValve",
+                        this.debug
+                    )
                 }
             ]
         ))
 
-        this.tempValve = new Valve(this.specification["tempValve"]["pin"], name + "TempValve", name, this.debug)
-        this.tempProbe = new Sensor(this.specification["tempProbe"]["pin"], name + "TempProbe", name, this.debug)
+        this.tempValve = new Valve(this.specification["tempValve"]["pin"], name + "TempValve", name, "coolantJar", "tempValve",
+        this.debug
+    )
+        this.tempProbe = new Sensor(this.specification["tempProbe"]["pin"], name + "TempProbe", name, "tempProbe", this.debug)
     }
 
     set setRecipe(newRecipe) {
@@ -74,14 +83,16 @@ class Jar {
         //this interval runs until the recipe is cancelled
         this.statusPolling = setInterval(() => {
             //determine if the cooling motor needs to run or not
-            if (this.tempProbe.value > (this.recipe["temperature"] + 2) && !this.cooling) {
-                if(pumpOnSignal)
-                    pumpOnSignal["on"] += 1
-                this.cooling = true
-            } else if (this.tempProbe.value < (this.recipe["temperature"] - 2) && this.cooling) {
-                if(pumpOnSignal)
-                    pumpOnSignal["on"] -= 1
-                this.cooling = false
+            if(this.recipe) {
+                if (this.tempProbe.value > (this.recipe["temperature"] + 2) && !this.cooling) {
+                    if (states.pumpOnSignal)
+                        states.pumpOnSignal += 1
+                    this.cooling = true
+                } else if (this.tempProbe.value < (this.recipe["temperature"] - 2) && this.cooling) {
+                    if (states.pumpOnSignal)
+                        states.pumpOnSignal -= 1
+                    this.cooling = false
+                }
             }
             //check if jar is idling
             if (this.state !== "incubationPrep" && this.impellerMotor.state === "idle" && this.tempValve.state === "idle") {
@@ -123,10 +134,12 @@ class Jar {
 
     cancelRecipe() {
         this.state = "idle"
+        this.recipe = null
         this.impellerMotor.cancelCurrentQueue()
         this.valves.forEach((valve, _) => {
             valve["valve"].cancelCurrentQueue()
         })
+        clearInterval(this.incubatePrep)
     }
 }
 

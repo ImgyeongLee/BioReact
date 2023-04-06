@@ -1,16 +1,20 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MotorDevice from "./MotorDevice";
 import ValveDevice from "./ValveDevice";
 import SensorDevice from "./SensorDevice";
 import {css} from "@emotion/css";
 
-function FinalJar({jar, socket}) {
+function FinalJar({jar, socket, allRecipes}) {
+    const [json, setJson] = useState("")
 
-    const [file, setFile] = useState(null)
-
-    function handleChange(event) {
-        setFile(event.target.files[0])
+    function handleChangeJSON(event){
+        console.log("EVENT:", event.target.value)
+        setJson(event.target.value)
     }
+
+    useEffect(()=>{
+        setJson(Object.keys(allRecipes)[0])
+    }, [allRecipes])
 
     function recipeBtnTxtDecider() {
         switch (jar.state) {
@@ -40,9 +44,13 @@ function FinalJar({jar, socket}) {
                 <h5>Recipe: {jar.recipe.name}</h5>
                 <h5>Target Temperature: {jar.recipe.temperature}</h5>
             </>}
-            <input type="file" id="recipeInput" name="recipe" accept="*.json" onChange={handleChange}/>
+            {/*<input type="file" id="recipeInput" name="recipe" accept="*.json" onChange={handleChange}/>*/}
+            <select onInput={handleChangeJSON} value={json}>
+                {Object.keys(allRecipes).map(recipe => <option key={recipe} value={recipe}>{recipe}</option>)}
+            </select>
             <button onClick={() => {
-                socket.emit("loadRecipe", file, jar.name, (status) => {
+                console.log("submitting recipe:", json, "for jar", jar.name)
+                socket.emit("loadRecipe", json, jar.name, (status) => {
                     if (status["status"] === "ok") {
                         console.log("loaded recipe")
                     } else {
@@ -119,12 +127,12 @@ function FinalJar({jar, socket}) {
             <p>Ready for incubation: {jar.incubateReady ? "true" : "false"}</p>
             <p>Receiving cooling: {jar.cooling ? "true" : "false"}</p>
             <div className={css`display: flex; flex-wrap: wrap`}>
-                <MotorDevice device={jar.impellerMotor} deviceGroup={"finalJars"} socket={socket}/>
+                <MotorDevice device={jar.impellerMotor} socket={socket}/>
                 {jar.valves.map((valve) =>
-                    <ValveDevice key={valve["name"]} device={valve} deviceGroup={"ingredientValve"} socket={socket}/>
+                    <ValveDevice key={valve["name"]} device={valve} socket={socket}/>
                 )}
-                <ValveDevice device={jar.tempValve} deviceGroup={"tempValve"} socket={socket}/>
-                <SensorDevice device={jar.tempProbe} deviceGroup={"tempProbe"} socket={socket}/>
+                <ValveDevice device={jar.tempValve} socket={socket}/>
+                <SensorDevice device={jar.tempProbe} socket={socket}/>
             </div>
         </div>
     )

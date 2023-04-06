@@ -9,12 +9,12 @@ function ValveDevice(props) {
         let newState = props.device.opened
         dispatch({
             "type": "UPDATE_VALVE",
-            "deviceGroup": props.deviceGroup,
+            "deviceGroup": props.device.deviceGroup,
             "jarName": props.device.jarName,
             "opened": !newState,
             "name": props.device.name
         })
-        props.socket.emit("toggleValve", props.device.jarName, props.device.name, props.deviceGroup, !newState, (data) => {
+        props.socket.emit("toggleValve", props.device.jarName, props.device.name, props.device.deviceGroup, !newState, (data) => {
             if (data["status"] === "ok") {
                 console.log("valve ", props.device.name, " of ", props.device.jarName, " changed to state ", !newState)
             } else {

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/osu-cs494-w23/final-project-bioreactor#readme",
   "dependencies": {
     "@mui/icons-material": "^5.11.11",
-    "@mui/material": "^5.11.12"
+    "@mui/material": "^5.11.12",
+    "write-json-file": "^5.0.0"
   }
 }

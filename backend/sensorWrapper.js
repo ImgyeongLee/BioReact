@@ -2,11 +2,12 @@ class Sensor {
     pin
     value = 0
 
-    constructor(pin, name, jarName, debug) {
+    constructor(pin, name, jarName, deviceGroup, debug) {
         this.pinCode = pin
         this.name = name
         this.jarName = jarName
         this.debug = debug
+        this.deviceGroup = deviceGroup
 
         if (debug === false) {
             const raspi = require('raspi');
@@ -31,6 +32,7 @@ class Sensor {
             "debug": this.debug,
             "name": this.name,
             "jarName": this.jarName,
+            "deviceGroup": this.deviceGroup,
             "type": "sensor"
         }
     }

@@ -1,4 +1,4 @@
-let {ingredientOnSignal} = require("./signals");
+let {states, ingredientOnSignal} = require("./states");
 
 class Valve {
     // motor's actionQueue's structure:
@@ -11,13 +11,14 @@ class Valve {
     gpio
     cancel
     state = "idle" //"running", "paused", "idle"
-    constructor(pin, name, jarName, ingredientJarName, debug) {
+    constructor(pin, name, jarName, ingredientJarName, deviceGroup, debug) {
         this.pinCode = pin
         this.opened = false
         this.debug = debug
         this.name = name
         this.jarName = jarName
         this.ingredientJarName = ingredientJarName
+        this.deviceGroup = deviceGroup
 
         if (debug === false) {
             const raspi = require('raspi');
@@ -44,10 +45,20 @@ class Valve {
 
     set openState(newState) {
         if(this.opened !== newState){
-            if(newState){
-                ingredientOnSignal[this.ingredientJarName] += 1
-            } else {
-                ingredientOnSignal[this.ingredientJarName] -= 1
+            switch (this.deviceGroup){
+                case "ingredientValve":
+                    if(newState){
+                        ingredientOnSignal[this.ingredientJarName] += 1
+                    } else {
+                        ingredientOnSignal[this.ingredientJarName] -= 1
+                    }
+                    break
+                case "tempValve":
+                    if(newState){
+                        states.pumpOnSignal += 1
+                    } else {
+                        states.pumpOnSignal -= 1
+                    }
             }
         }
         this.opened = newState
@@ -72,6 +83,7 @@ class Valve {
             "debug": this.debug,
             "name": this.name,
             "jarName": this.jarName,
+            "deviceGroup": this.deviceGroup,
             "type": "valve"
         }
     }

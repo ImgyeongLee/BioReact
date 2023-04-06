@@ -22,7 +22,7 @@ export function useSocket(timeout) {
 
                 newSocket.emit("getAllStatuses", (data) => {
                     if (data["status"] === "ok") {
-                        // console.log("received statuses: ", data)
+                        // console.log("received statuses: ", data["machine"])
                         dispatch({
                             "type": "UPDATE_WHOLE_STATUS",
                             "newStatus": data["machine"]

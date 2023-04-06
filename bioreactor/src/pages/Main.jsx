@@ -1,38 +1,39 @@
-import React, { useState } from "react";
-import EmptyJar from "../components/EmptyJar";
-import ProgressJar from "../components/ProgressJar";
-import color from "../data/color.json";
+import React from "react";
+import {useSelector} from "react-redux";
+import {getLocalStatus} from "../redux/selectors";
+import Jar from "../components/Jar";
+import {socket} from "../context/socket";
+import {notifyBad, notifyGood} from "../notify";
 
 const Main = () => {
-  const [onRecipe, setOnRecipe] = useState(false);
+    const deviceStatus = useSelector(getLocalStatus);
+    if (!deviceStatus.finalJars[0]) {
+        return;
+    }
 
-  return (
-    <>
-      {!onRecipe && (
-        <>
-          <EmptyJar />
-          <EmptyJar />
-          <EmptyJar />
-        </>
-      )}
-      {onRecipe && (
-        <>
-          <ProgressJar status={color.success} jarName={"Jar 1"} />
-          <ProgressJar status={color.loading} jarName={"Jar 2"} />
-          <ProgressJar status={color.warning} jarName={"Jar 3"} />
-          <button className="stop-button">STOP</button>
-        </>
-      )}
+    return (
+        <div>
+            <div className="jar-container">
+                {deviceStatus.finalJars.map((jar) => {
+                    return <Jar key={jar.name} jar={jar}/>;
+                })}
 
-      <button
-        onClick={() => {
-          setOnRecipe(!onRecipe);
-        }}
-      >
-        TEST
-      </button>
-    </>
-  );
+            </div>
+            <button className="stop-button" onClick={() => {
+                deviceStatus.finalJars.forEach((jar) => {
+                    socket.emit("cancelRecipe", jar.name, (data) => {
+                        if (data["status"] === "error") {
+                            notifyBad(jar.name + ": ", data["errorMessage"])
+                        } else {
+                            notifyGood("Stopped jar " + jar.name)
+                        }
+                    })
+                })
+            }
+            }>STOP
+            </button>
+        </div>
+    );
 };
 
 export default Main;

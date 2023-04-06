@@ -1,6 +1,6 @@
 const {Jar} = require("./jarClass");
 const {Motor} = require("./motorWrapper");
-let {pumpOnSignal, ingredientOnSignal} = require("./signals")
+let {states, ingredientOnSignal} = require("./states")
 
 const machineSpecification = require("./machine_specification.json")
 
@@ -11,6 +11,7 @@ let machine = {
             ingredientJar["pumpMotor"]["pin"],
             ingredientJar["ingredient"] + " pump",
             ingredientJar["ingredient"],
+            "startJars",
             machineSpecification["debug"]
         )]
     )),
@@ -18,28 +19,30 @@ let machine = {
         machineSpecification["coolantMotor"]["pin"],
         "coolantMotor",
         "coolant",
+        "coolantMotor",
         machineSpecification["debug"]
     )
 }
 
 function getAllStatuses() {
     return {
+        "manual": states.manual,
         "finalJars": Array.from(machine["finalJars"], ([_, jar]) => jar.allStats),
         "startJars": Array.from(machine["startJars"], ([_, startJarPump]) => startJarPump.allStats),
         "coolantMotor": machine["coolantMotor"].allStats
     }
 }
 
+//automatic machine interval.
 setInterval(() => {
-    if (!machine) {
+    if (!machine || states.manual) {
         return
     }
-    if (pumpOnSignal["on"] > 0) {
+    if (states.pumpOnSignal > 0) {
         machine["coolantMotor"].Speed = 1000
     } else {
         machine["coolantMotor"].Speed = 0
     }
-    console.log(ingredientOnSignal)
     machine["startJars"].forEach(ingredientPump => {
         if(ingredientOnSignal[ingredientPump["jarName"]] === undefined)
             return

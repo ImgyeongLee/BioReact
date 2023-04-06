@@ -2,7 +2,7 @@
   "name": "salty alcohol",
   "time": 10000,
   "motorSpeed": 500,
-  "temperature": 40,
+  "temperature": 50,
   "ingredients": {
     "Isopropyl Alcohol": 10,
     "Salt water": 30

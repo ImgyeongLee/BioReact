@@ -1,47 +1,29 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import color from "../data/color.json";
+import React from "react";
+import {socket} from "../context/socket";
+import {notifyBad} from "../notify";
 
-const ValveControl = () => {
-  const ControlButton = styled.button`
-    background: ${(props) => (props.isOpen ? color.warning : color.success)};
-    color: white;
-    padding: 0.2em 0.7em;
-    font-size: 1em;
-    border-radius: 0.5em;
-    border: 1px solid
-      ${(props) => (props.isOpen ? color.redBorder : color.greenBorder)};
-    margin-left: 2em;
-    cursor: pointer;
-    transition-duration: 0.1s;
+const ValveControl = ({valve}) => {
 
-    &:hover {
-      color: ${color.maintext};
-    }
-
-    &:active {
-      background: ${(props) =>
-        props.isOpen ? color.redBorder : color.greenBorder};
-      color: white;
-    }
-  `;
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <li className="valve-li">
-      Valve1 &#40;Jar&#41;
-      <ControlButton
-        isOpen={isOpen}
-        onClick={(e) => {
-          e.preventDefault();
-          setIsOpen(!isOpen);
-        }}
-      >
-        {isOpen ? "Close" : "Open"}
-      </ControlButton>
-    </li>
-  );
+    return (
+        <li className="valve-li">
+            {valve.name} &#40;{valve.jarName}&#41;
+            <button className="valve-button"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        console.log(valve)
+                        socket.emit("toggleValve", valve.jarName, valve.name, valve.deviceGroup, !valve.opened, (data) => {
+                            if (data["status"] === "error") {
+                                notifyBad(data["errorMessage"])
+                            } else {
+                                console.log("Valve changed:", data)
+                            }
+                        })
+                    }}
+            >
+                {valve.opened ? "Close" : "Open"}
+            </button>
+        </li>
+    );
 };
 
 export default ValveControl;

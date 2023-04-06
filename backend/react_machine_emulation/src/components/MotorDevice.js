@@ -8,11 +8,11 @@ function MotorDevice(props) {
     function handleSetMotorSpeed(event) {
         dispatch({
             "type": "UPDATE_MOTOR_SPEED",
-            "deviceGroup": props.deviceGroup,
+            "deviceGroup": props.device.deviceGroup,
             "newSpeed": event.target.value,
             "jarName": props.device.jarName
         })
-        props.socket.emit("setMotorSpeed", props.device.jarName, props.device.name, props.deviceGroup, event.target.value, (data) => {
+        props.socket.emit("setMotorSpeed", props.device.jarName, props.device.name, props.device.deviceGroup, event.target.value, (data) => {
             if (data["status"] === "ok") {
                 console.log("motor ", props.device.name, " of ", props.device.jarName, " changed to speed ", data["newSpeed"])
             } else {
